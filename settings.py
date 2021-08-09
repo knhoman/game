@@ -10,3 +10,5 @@ class Settings:
         self.window_height = 720
         self.bg_color = (100, 100, 200)
         self.scale = 0.2
+
+        self.spaceship_speed = 1.2
