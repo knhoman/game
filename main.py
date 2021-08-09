@@ -2,6 +2,7 @@ import sys
 import pygame
 
 from settings import Settings
+from spaceship import Spaceship
 
 class AlienInvasion:
     """Класс для управления ресурсами и поведением игры"""
@@ -15,6 +16,8 @@ class AlienInvasion:
         self.screen = pygame.display.set_mode((self.settings.window_width, self.settings.window_height))
         pygame.display.set_caption('AlienInvasion')
 
+        self.spaceship = Spaceship(self)
+
     def run_game(self):
         """Запуск основного цикла игры"""
 
@@ -27,6 +30,7 @@ class AlienInvasion:
 
             #При каждом проходе цикла перерисовывается экран
             self.screen.fill(self.settings.bg_color)
+            self.spaceship.blitme()
 
             """Отображение последнего прорисоанного экрана"""
             pygame.display.flip()
