@@ -22,18 +22,46 @@ class AlienInvasion:
         """Запуск основного цикла игры"""
 
         while True:
-            """Отслеживание событий клавиатуры и мыши"""
+            #Отслеживание событий клавиатуры и мыши
+            self._check_events()
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
+            #обновление позиции корабля
+            self.spaceship.update()
 
             #При каждом проходе цикла перерисовывается экран
-            self.screen.fill(self.settings.bg_color)
-            self.spaceship.blitme()
+            self._update_screen()
 
-            """Отображение последнего прорисоанного экрана"""
-            pygame.display.flip()
+    def _check_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    self.spaceship.moving_right = True
+                if event.key == pygame.K_LEFT:
+                    self.spaceship.moving_left = True
+                if event.key == pygame.K_UP:
+                    self.spaceship.moving_up = True
+                if event.key == pygame.K_DOWN:
+                    self.spaceship.moving_down = True
+
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_RIGHT:
+                    self.spaceship.moving_right = False
+                if event.key == pygame.K_LEFT:
+                    self.spaceship.moving_left = False
+                if event.key == pygame.K_UP:
+                    self.spaceship.moving_up = False
+                if event.key == pygame.K_DOWN:
+                    self.spaceship.moving_down = False
+
+    def _update_screen(self):
+        self.screen.fill(self.settings.bg_color)
+        self.spaceship.blitme()
+
+        #отображение последнего прорисованного экрана
+        pygame.display.flip()
 
 
 if __name__ == '__main__':
