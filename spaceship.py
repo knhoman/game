@@ -10,7 +10,7 @@ class Spaceship:
         self.screen_rect = self.screen.get_rect()
 
         """Загружает изображение корабля и получает прямоугольник"""
-        self.image = pygame.image.load('icons/spaceship.svg')
+        self.image = pygame.image.load('icons/spaceship.png')
 
         x, y = self.image.get_size()
         self.image = pygame.transform.scale(self.image, (int(x*self.settings.scale), int(y*self.settings.scale)))
@@ -47,6 +47,6 @@ class Spaceship:
 
 
     def blitme(self):
-        """Рисует корабль в текузей позиции"""
+        """Рисует корабль в текущей позиции"""
 
         self.screen.blit(self.image, self.rect)
