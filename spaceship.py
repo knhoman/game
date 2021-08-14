@@ -17,12 +17,7 @@ class Spaceship:
 
         self.rect = self.image.get_rect()
 
-        #каждый новый корабль появляется в центре низа экрана
-        self.rect.midbottom = self.screen_rect.midbottom
-
-        #сохранение вещественной координаты центра корябля
-        self.x = float(self.rect.x)
-        self.y = float(self.rect.y)
+        self.center_ship()
 
         #флаги перемещения
         self.moving_right = False
@@ -50,3 +45,12 @@ class Spaceship:
         """Рисует корабль в текущей позиции"""
 
         self.screen.blit(self.image, self.rect)
+
+    def center_ship(self):
+        # помещение корабля в начальную позицию
+        # каждый новый корабль появляется в центре низа экрана
+        self.rect.midbottom = self.screen_rect.midbottom
+
+        # сохранение вещественной координаты центра корябля
+        self.x = float(self.rect.x)
+        self.y = float(self.rect.y)

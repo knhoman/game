@@ -1,10 +1,12 @@
 import sys
+from time import sleep
 import pygame
 
 from settings import Settings
 from spaceship import Spaceship
 from bullet import Bullet
 from alien import Alien
+from game_stats import GameStats
 
 
 class AlienInvasion:
@@ -25,6 +27,9 @@ class AlienInvasion:
 
         pygame.display.set_caption('AlienInvasion')
 
+        # создание экземпляра для хранения статистики текущей игры
+        self.stats = GameStats(self)
+
         self.spaceship = Spaceship(self)
 
         self.bullets = pygame.sprite.Group()
@@ -39,16 +44,18 @@ class AlienInvasion:
             # Отслеживание событий клавиатуры и мыши
             self._check_events()
 
-            # обновление позиции корабля
-            self.spaceship.update()
+            if self.stats.game_status:
+                # обновление позиции корабля
+                self.spaceship.update()
 
-            # обновление позиции снаряда и удаление снарядов, вышедших за экран
-            self._update_bullets()
+                # обновление позиции снаряда и удаление снарядов, вышедших за экран
+                self._update_bullets()
 
-            # движение пришельцев
-            self._update_aliens()
+                # движение пришельцев
+                self._update_aliens()
 
-            # При каждом проходе цикла перерисовывается экран
+                # При каждом проходе цикла перерисовывается экран
+
             self._update_screen()
 
     def _check_events(self):
@@ -101,9 +108,17 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
+        self._check_bullet_alien_collision()
+
+
+    def _check_bullet_alien_collision(self):
         # проверка попаданий в пришельцев
         # при обнаружении попадания удалить снаряд и пришельца
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
+
+        if not self.aliens:
+            self.bullets.empty()
+            self._create_fleet()
 
     def _create_fleet(self):
         # создание флота
@@ -119,7 +134,7 @@ class AlienInvasion:
         number_rows = available_space_y // (2 * alien_height)
 
         for row_number in range(number_rows):
-            #создание первого ряда пришельцев
+            # создание первого ряда пришельцев
             for alien_number in range(number_aliens_x):
                 self._create_alien(alien_number, row_number)
 
@@ -148,6 +163,40 @@ class AlienInvasion:
     def _update_aliens(self):
         self.aliens.update()
         self._check_fleet_edges()
+
+        # проверка коллизий корабля и группы пришельцев
+        if pygame.sprite.spritecollideany(self.spaceship, self.aliens):
+            self._spaceship_hit()
+
+        # проверка добрался ли хоть один пришелец до нижней границы экрана
+        self._check_aliens_bottom()
+
+    def _spaceship_hit(self):
+        # уменьшение числа жизней при столкновении корабля с пришельцем
+        if self.stats.ships_left > 0:
+            self.stats.ships_left -= 1
+
+            # очистка списков снарядов и пришельцев
+            self.aliens.empty()
+            self.bullets.empty()
+
+            # создание нового флота пришельцев и помещение корябля в начальную позицию
+            self._create_fleet()
+            self.spaceship.center_ship()
+
+            # пауза
+            sleep(0.5)
+
+        else:
+            self.stats.game_status = False
+
+    def _check_aliens_bottom(self):
+        # проверяет добрались ли пришельцы до нижнего края экрана
+        screen_rect = self.screen.get_rect()
+        for alien in self.aliens.sprites():
+            if alien.rect.bottom >= screen_rect.bottom:
+                self._spaceship_hit()
+                break
 
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
