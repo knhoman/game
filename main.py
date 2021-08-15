@@ -82,6 +82,9 @@ class AlienInvasion:
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
         if button_clicked and not self.stats.game_status:
 
+            # задаем начальные параметры скорости игры
+            self.settings.initialize_dynamic_settings()
+
             # сброс игровой статистики
             self.stats.reset_stats()
             self.stats.game_status = True
@@ -138,14 +141,15 @@ class AlienInvasion:
 
         self._check_bullet_alien_collision()
 
-
     def _check_bullet_alien_collision(self):
+
         # проверка попаданий в пришельцев
         # при обнаружении попадания удалить снаряд и пришельца
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
 
         if not self.aliens:
             self.bullets.empty()
+            self.settings.increase_speed()
             self._create_fleet()
 
     def _create_fleet(self):

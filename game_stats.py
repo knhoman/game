@@ -14,4 +14,7 @@ class GameStats:
         # инициализирует статистику, изменяющуюся в ходе игры
         self.ships_left = self.settings.ships_limit
 
+        # подсчет очков
+        self.score = 0
+
 

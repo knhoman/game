@@ -29,13 +29,13 @@ class Spaceship:
         #обновляет позицию корабля с учетом флагов self.moving_
         #обновляются атрибуты self.x и self.y, а не self.rect
         if self.moving_right and self.rect.right < self.screen_rect.right:
-            self.x += self.settings.spaceship_speed
+            self.x += self.settings.spaceship_speed_factor
         if self.moving_left and self.rect.left > 0:
-            self.x -= self.settings.spaceship_speed
+            self.x -= self.settings.spaceship_speed_factor
         if self.moving_up and self.rect.top > 0:
-            self.y -= self.settings.spaceship_speed
+            self.y -= self.settings.spaceship_speed_factor
         if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
-            self.y += self.settings.spaceship_speed
+            self.y += self.settings.spaceship_speed_factor
 
         self.rect.x = self.x
         self.rect.y = self.y
