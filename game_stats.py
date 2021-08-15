@@ -1,4 +1,4 @@
-class GameStats():
+class GameStats:
 
     # статистика для игры
     def __init__(self, ai_game):
@@ -10,6 +10,7 @@ class GameStats():
         self.game_status = False
 
     def reset_stats(self):
+
         # инициализирует статистику, изменяющуюся в ходе игры
         self.ships_left = self.settings.ships_limit
 
