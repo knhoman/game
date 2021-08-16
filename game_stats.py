@@ -9,6 +9,9 @@ class GameStats:
         # игра запускается в неактивном состоянии
         self.game_status = False
 
+        # рекорды
+        self.high_score = 0
+
     def reset_stats(self):
 
         # инициализирует статистику, изменяющуюся в ходе игры
@@ -16,5 +19,8 @@ class GameStats:
 
         # подсчет очков
         self.score = 0
+
+        # текущий уровень
+        self.level = 1
 
 

@@ -8,6 +8,7 @@ from bullet import Bullet
 from alien import Alien
 from game_stats import GameStats
 from button import Button
+from scoreboard import Scoreboard
 
 
 class AlienInvasion:
@@ -30,6 +31,7 @@ class AlienInvasion:
 
         # создание экземпляра для хранения статистики текущей игры
         self.stats = GameStats(self)
+        self.scoreboard = Scoreboard(self)
 
         self.spaceship = Spaceship(self)
 
@@ -88,6 +90,8 @@ class AlienInvasion:
             # сброс игровой статистики
             self.stats.reset_stats()
             self.stats.game_status = True
+            self.scoreboard.prep_score()
+            self.scoreboard.prep_level()
 
             # очистка списков снарядов и пришельце
             self.bullets.empty()
@@ -147,10 +151,19 @@ class AlienInvasion:
         # при обнаружении попадания удалить снаряд и пришельца
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
 
+        if collisions:
+            for alien in collisions.values():
+                self.stats.score += self.settings.alien_points
+            self.scoreboard.prep_score()
+            self.scoreboard.check_high_score()
+
         if not self.aliens:
             self.bullets.empty()
             self.settings.increase_speed()
+            self.stats.level += 1
+            self.scoreboard.prep_level()
             self._create_fleet()
+
 
     def _create_fleet(self):
         # создание флота
@@ -238,7 +251,10 @@ class AlienInvasion:
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
 
+        # вывод информации о счете
         self.aliens.draw(self.screen)
+
+        self.scoreboard.show_score()
 
         # кнопка Play будет отображаться в том случае, если игра не активна
         if not self.stats.game_status:
