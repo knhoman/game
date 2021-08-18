@@ -1,4 +1,6 @@
 import pygame.font
+from pygame.sprite import Group
+from spaceship import Spaceship
 
 class Scoreboard:
 
@@ -6,6 +8,7 @@ class Scoreboard:
     def __init__(self, ai_game):
 
         # инициализируем атрибуты подсчета очков
+        self.ai_game = ai_game
         self.screen = ai_game.screen
         self.screen_rect = self.screen.get_rect()
         self.settings = ai_game.settings
@@ -23,6 +26,9 @@ class Scoreboard:
 
         # текущий уровень
         self.prep_level()
+
+        # количество жизней
+        self.prep_ships()
 
     def prep_score(self):
 
@@ -56,8 +62,18 @@ class Scoreboard:
 
         # вывод текущего уровня в левом верхнем углу
         self.current_level_rect = self.current_level_image.get_rect()
-        self.current_level_rect.left = self.screen_rect.left + 20
-        self.current_level_rect.top = self.score_rect.top
+        self.current_level_rect.right = self.screen_rect.right - 20
+        self.current_level_rect.top = self.score_rect.bottom + 10
+
+    def prep_ships(self):
+
+        # выводит количество оставшихся жизней
+        self.ships = Group()
+        for ship_number in range(self.stats.ships_left):
+            ship = Spaceship(self.ai_game)
+            ship.rect.x = 20 + ship_number * ship.rect.width
+            ship.rect.y = 20
+            self.ships.add(ship)
 
     def show_score(self):
 
@@ -65,6 +81,7 @@ class Scoreboard:
         self.screen.blit(self.score_image, self.score_rect)
         self.screen.blit(self.high_score_image, self.high_score_rect)
         self.screen.blit(self.current_level_image, self.current_level_rect)
+        self.ships.draw(self.screen)
 
     def check_high_score(self):
 

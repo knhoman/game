@@ -1,5 +1,4 @@
 import sys
-from time import sleep
 import pygame
 
 from settings import Settings
@@ -92,6 +91,7 @@ class AlienInvasion:
             self.stats.game_status = True
             self.scoreboard.prep_score()
             self.scoreboard.prep_level()
+            self.scoreboard.prep_ships()
 
             # очистка списков снарядов и пришельце
             self.bullets.empty()
@@ -224,13 +224,14 @@ class AlienInvasion:
             # очистка списков снарядов и пришельцев
             self.aliens.empty()
             self.bullets.empty()
+            self.scoreboard.prep_ships()
 
             # создание нового флота пришельцев и помещение корябля в начальную позицию
             self._create_fleet()
             self.spaceship.center_ship()
 
             # пауза
-            sleep(0.5)
+            pygame.time.wait(500)
 
         else:
             self.stats.game_status = False
